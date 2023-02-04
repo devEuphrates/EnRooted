@@ -1,24 +1,28 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class WaterManager : MonoBehaviour
 {
     [SerializeField] private GameObject _water_line_prefab;
-    private LineRenderer _active_water_line_renderer;
+    [SerializeField] float _animDelay = .1f;
 
-    
-
-    // Update is called once per frame
     public void  HighlightWaterRenderer(Node node)
     {
-        _active_water_line_renderer = Instantiate(_water_line_prefab, Vector3.zero, Quaternion.identity).GetComponent<LineRenderer>();
-        Vector3[] positions = new Vector3[node.PathToRoot.Count];
-        for (int i = 0; i < node.PathToRoot.Count; i++)
+        LineRenderer line = Instantiate(_water_line_prefab, Vector3.zero, Quaternion.identity).GetComponent<LineRenderer>();
+        SpawnAsync(node, line);
+    }
+
+    async void SpawnAsync(Node node, LineRenderer line)
+    {
+        List<Node> path = node.PathToRoot;
+        line.positionCount = 0;
+
+        for (int i = 0; i < path.Count; i++)
         {
-            positions[i] = node.PathToRoot[i].transform.position;
+            line.positionCount++;
+            line.SetPosition(i, path[i].transform.position);
+            await Task.Delay((int)(_animDelay * 100));
         }
-        _active_water_line_renderer.positionCount = positions.Length;
-        _active_water_line_renderer.SetPositions(positions);
     }
 }
