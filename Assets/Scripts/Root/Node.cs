@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
+    public Branch OwnerBranch;
     public Node Parent;
     public List<Node> Child = new List<Node>();
-    public float DistanceToParent = 0;
+    public float DistanceToParent = .3f;
     public float DistanceAbove
     {
         get

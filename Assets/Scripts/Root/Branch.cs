@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
@@ -6,6 +7,7 @@ public class Branch : MonoBehaviour
 {
     [SerializeField] List<Node> _nodes = new List<Node>();
     [SerializeField] LineRenderer _lineRenderer;
+    [SerializeField] Transform _nodeHolder;
 
     Mesh _genMesh;
 
@@ -25,12 +27,32 @@ public class Branch : MonoBehaviour
 
     public void AddNode(Node node, int atIndex = -1)
     {
+        node.transform.parent = _nodeHolder;
+
         if (atIndex <= 0)
+        {
+            if (_nodes.Count > 0)
+            {
+                Node lastNode = _nodes[_nodes.Count - 1];
+
+                lastNode.Child.Add(node);
+                node.Parent = lastNode;
+            }
+
             _nodes.Add(node);
+            SetLineRenderer();
+            return;
+        }
+
+        _nodes[atIndex].Parent = node;
+        _nodes[atIndex - 1].Child.Remove(_nodes[atIndex]);
+        _nodes[atIndex - 1].Child.Append(node);
 
         _nodes.Insert(atIndex, node);
         SetLineRenderer();
     }
+
+    public Node GetNode(int index) => index == -1 ? _nodes[_nodes.Count - 1] : _nodes[index];
 
     void SetLineRenderer()
     {
