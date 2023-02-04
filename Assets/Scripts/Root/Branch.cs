@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class Branch : MonoBehaviour
@@ -16,13 +17,12 @@ public class Branch : MonoBehaviour
     private void Awake()
     {
         _genMesh = new Mesh();
+        _meshFilter = GetComponent<MeshFilter>();
     }
 
     private void Start()
     {
-        _meshFilter = GetComponent<MeshFilter>();
         SetLineRenderer();
-        //SetMesh();
     }
 
     public void AddNode(Node node, int atIndex = -1)
@@ -62,11 +62,17 @@ public class Branch : MonoBehaviour
 
         _lineRenderer.positionCount = positions.Length;
         _lineRenderer.SetPositions(positions);
+        //_lineRenderer.Simplify(.1f);
+        SetMesh();
     }
 
     void SetMesh()
     {
         _lineRenderer.BakeMesh(_genMesh);
+
+        if (!_genMesh)
+            return;
+
         _lineRenderer.positionCount = 0;
         _meshFilter.mesh = _genMesh;
     }
