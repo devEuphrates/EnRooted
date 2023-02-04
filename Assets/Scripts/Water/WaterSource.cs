@@ -10,7 +10,6 @@ public class WaterSource : MonoBehaviour
     [SerializeField] private float _decrease_by_Value;
     [SerializeField] private float _approach_rate;
     Collider _collider;
-    bool _enabled = true;
     private void Awake()
     {
         _currentValue = _baseValue;
@@ -19,34 +18,15 @@ public class WaterSource : MonoBehaviour
     }
     public void ModifyValue()
     {
-        if (_enabled)
-        {
-            _targetValue = ((_targetValue - _decrease_by_Value) <= 0) ? 0 : _targetValue - _decrease_by_Value;
-            Debug.Log(_targetValue);
-
-        }
-        if (_targetValue == 0)
-        {
-            _collider.enabled = false;
-            _enabled = false;
-        }
+        _targetValue = (_targetValue - _decrease_by_Value <= 0) ? 0 : _targetValue - _decrease_by_Value;
+        Debug.Log(_targetValue);
+        if (_targetValue == 0) _collider.isTrigger = false;
     }
     void Update()
     {
-
         var temp = transform.localScale;
         _currentValue = Mathf.Lerp(_currentValue, _targetValue, _approach_rate);
-        if (transform.localScale.y <= 0.01)
-        {
-            Debug.Log("dasdasd");
-            gameObject.SetActive(false);
-        }
-
         temp.y = _currentValue / _baseValue;
         transform.localScale = temp;
-
-    
-
-
     }
 }
