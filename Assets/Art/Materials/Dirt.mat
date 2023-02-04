@@ -20,16 +20,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ground
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Name: Dirt
+  m_Shader: {fileID: -6465566751694194690, guid: c3339945ae0d3f9478b1d2f8ba13812b,
+    type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -99,18 +99,26 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Density: 300
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _Dirt_Offset: 22.08
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _Fade_Amount: 2
+    - _Fade_Offset: 1.25
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Inner_Size: 4.13
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Offset: 50
     - _Parallax: 0.005
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Side_Multiplier: 5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -122,5 +130,9 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Main_Color: {r: 0.49411765, g: 0.34901962, b: 0.24705882, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Side_Color: {r: 0.3773585, g: 0.260568, b: 0.17621928, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Tiling: {r: 20, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

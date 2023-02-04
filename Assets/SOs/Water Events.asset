@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e411d25c7741e04429b14c32db88aac7, type: 3}
-  m_Name: Scroll Speed
+  m_Script: {fileID: 11500000, guid: 4bfa0db23ccc13c47ab222b9071f1247, type: 3}
+  m_Name: Water Events
   m_EditorClassIdentifier: 
-  _value: 1000

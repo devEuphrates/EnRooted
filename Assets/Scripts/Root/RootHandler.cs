@@ -18,7 +18,7 @@ public class RootHandler : MonoBehaviour
     [Header("Line Renderer Settings")]
     private Vector3 _initialPosition;
 
-   [SerializeField] private WaterManager _waterManager;
+    [SerializeField] private WaterManager _waterManager;
 
     [SerializeField] private float _initialSpawnOffset;
     [SerializeField] private float _minNodeSpawnCancelValue;
@@ -89,7 +89,6 @@ public class RootHandler : MonoBehaviour
         _selectedNode = newNode;
         _selectedBranch.AddNode(newNode);
         newNode.OwnerBranch = _selectedBranch;
-        newNode.Init(_waterAmount, _waterManager);
     }
 
     private void CreateBranch(Node rootNode)
