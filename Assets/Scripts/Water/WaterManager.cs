@@ -6,15 +6,34 @@ public class WaterManager : MonoBehaviour
 {
     [SerializeField] private GameObject _water_line_prefab;
     [SerializeField] float _animDelay = .1f;
+    [SerializeField] WaterEventSO _waterEvents;
 
-    public void  HighlightWaterRenderer(Node node)
+    Dictionary<Node, LineRenderer> _lines = new Dictionary<Node, LineRenderer>();
+
+    private void OnEnable()
     {
-        LineRenderer line = Instantiate(_water_line_prefab, Vector3.zero, Quaternion.identity).GetComponent<LineRenderer>();
-        SpawnAsync(node, line);
+        _waterEvents.OnCreateWater += CreateWaterLine;
+        _waterEvents.OnDestroyWater += DestroyWaterLine;
     }
 
-    async void SpawnAsync(Node node, LineRenderer line)
+    private void OnDisable()
     {
+        _waterEvents.OnCreateWater -= CreateWaterLine;
+        _waterEvents.OnDestroyWater -= DestroyWaterLine;
+    }
+
+    void  CreateWaterLine(Node node)
+    {
+        LineRenderer line = Instantiate(_water_line_prefab, Vector3.zero, Quaternion.identity, transform).GetComponent<LineRenderer>();
+        _lines[node] = line;
+        SpawnAsync(node);
+    }
+
+    void DestroyWaterLine(Node node) => DespawnAsync(node);
+
+    async void SpawnAsync(Node node)
+    {
+        LineRenderer line = _lines[node];
         List<Node> path = node.PathToRoot;
         line.positionCount = 0;
 
@@ -24,5 +43,19 @@ public class WaterManager : MonoBehaviour
             line.SetPosition(i, path[i].transform.position);
             await Task.Delay((int)(_animDelay * 100));
         }
+    }
+
+    async void DespawnAsync(Node node)
+    {
+        LineRenderer line = _lines[node];
+
+        while (line.positionCount > 0)
+        {
+            line.positionCount--;
+            await Task.Delay((int)(_animDelay * 100));
+        }
+
+        Destroy(_lines[node].gameObject);
+        _lines.Remove(node);
     }
 }

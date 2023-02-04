@@ -44,4 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a778d14f3527ccf41834073c0dc6b851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _water_line_prefab: {fileID: 0}
+  _water_line_prefab: {fileID: 8757411021375821161, guid: 91a3e2ae98557f842bd45ad95a5fbf70,
+    type: 3}
+  _animDelay: 0.1
+  _waterEvents: {fileID: 11400000, guid: 33b85b9ef79819e43bf194bfc1265490, type: 2}

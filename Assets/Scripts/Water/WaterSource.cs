@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WaterSource : MonoBehaviour
@@ -10,6 +8,7 @@ public class WaterSource : MonoBehaviour
     [SerializeField] private float _decrease_by_Value;
     [SerializeField] private float _approach_rate;
     Collider _collider;
+
     private void Awake()
     {
         _currentValue = _baseValue;
@@ -19,7 +18,6 @@ public class WaterSource : MonoBehaviour
     public void ModifyValue()
     {
         _targetValue = (_targetValue - _decrease_by_Value <= 0) ? 0 : _targetValue - _decrease_by_Value;
-        Debug.Log(_targetValue);
         if (_targetValue == 0) _collider.isTrigger = false;
     }
     void Update()

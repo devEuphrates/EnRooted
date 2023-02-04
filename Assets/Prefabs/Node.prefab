@@ -72,10 +72,10 @@ MonoBehaviour:
   Parent: {fileID: 0}
   Child: []
   DistanceToParent: 0.3
-  _waterLinePrefab: {fileID: 8757411021375821161, guid: 91a3e2ae98557f842bd45ad95a5fbf70,
-    type: 3}
+  _waterAmount: {fileID: 11400000, guid: abe299e46dde404409373877780e5f48, type: 2}
   _water_increase_amount: 1
   _time_to_call_water_source: 0.5
+  _waterEvents: {fileID: 11400000, guid: 33b85b9ef79819e43bf194bfc1265490, type: 2}
 --- !u!23 &6097694708562383849
 MeshRenderer:
   m_ObjectHideFlags: 0
