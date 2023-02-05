@@ -54,24 +54,30 @@ public class RootHandler : MonoBehaviour
         if (Vector3.Distance(mouseWorldPosition, _initialPosition) < _initialSpawnOffset)
             return;
 
-        if (_selectedNode.Child.Count == 0)
+        if (TryFindingPoint(mousePos))
+            return;
+
+        if (_selectedNode.ChildCount == 0)
         {
             _selectedBranch = _selectedNode.OwnerBranch;
-            CreatePoint(mouseWorldPosition);
+            CreateSegment(mouseWorldPosition);
             _initialPosition = mouseWorldPosition;
             return;
         }
 
         CreateBranch(_selectedNode);
-        CreatePoint(mouseWorldPosition);
+        CreateSegment(mouseWorldPosition);
     }
 
+    RaycastHit[] hits = new RaycastHit[5];
     private bool TryFindingPoint(Vector3 mousePosition)
     {
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _nodeLayer))
+
+        int cnt = Physics.RaycastNonAlloc(ray, hits, _rayDistance, _nodeLayer);
+        if (cnt > 0)
         {
-            if (!hit.transform.TryGetComponent<Node>(out var node))
+            if (!hits[cnt - 1].transform.TryGetComponent<Node>(out var node))
                 return false;
 
             _initialPosition = node.transform.position;
@@ -82,13 +88,34 @@ public class RootHandler : MonoBehaviour
         return false;
     }
 
-    private void CreatePoint(Vector3 position)
+    private bool TryFindingPoinInArea(Vector3 pos)
     {
-        var newNode = Instantiate(_nodePrefab, position, Quaternion.identity).GetComponent<Node>();
-        newNode.Parent = _selectedNode;
-        _selectedNode = newNode;
-        _selectedBranch.AddNode(newNode);
-        newNode.OwnerBranch = _selectedBranch;
+        int cnt = Physics.SphereCastNonAlloc(pos, _minNodeSpawnCancelValue, Vector3.zero, hits, _rayDistance, _nodeLayer);
+        return cnt > 0 && hits[cnt - 1].transform.GetComponent<Node>() != _selectedNode;
+    }
+
+    private void CreateSegment(Vector3 position)
+    {
+        _initialPosition = _selectedNode.transform.position;
+        int cnt = (int)((position - _initialPosition).magnitude / _initialSpawnOffset);
+        Vector3 dir = (position - _initialPosition).normalized;
+
+        for (int i = 1; i < cnt + 1; i++)
+        {
+            Vector3 pos = _initialPosition + dir * i * _initialSpawnOffset;
+
+            if (TryFindingPoinInArea(pos))
+            {
+                _enabled = false;
+                return;
+            }
+
+            var newNode = Instantiate(_nodePrefab, pos, Quaternion.identity).GetComponent<Node>();
+            newNode.Parent = _selectedNode;
+            _selectedBranch.AddNode(newNode);
+            newNode.OwnerBranch = _selectedBranch;
+            _selectedNode = newNode;
+        }
     }
 
     private void CreateBranch(Node rootNode)

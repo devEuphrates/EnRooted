@@ -29,7 +29,13 @@ public class WaterManager : MonoBehaviour
         SpawnAsync(node);
     }
 
-    void DestroyWaterLine(Node node) => DespawnAsync(node);
+    void DestroyWaterLine(Node node)
+    {
+        if (!_lines.ContainsKey(node))
+            return;
+
+        DespawnAsync(node);
+    }
 
     async void SpawnAsync(Node node)
     {
@@ -37,9 +43,20 @@ public class WaterManager : MonoBehaviour
         List<Node> path = node.PathToRoot;
         line.positionCount = 0;
 
-        for (int i = 0; i < path.Count; i++)
+        if (path.Count > 1)
+        {
+            line.positionCount = 2;
+            line.SetPosition(0, path[0].transform.position);
+            line.SetPosition(1, path[2].transform.position);
+        }
+
+        for (int i = 2; i < path.Count; i++)
         {
             line.positionCount++;
+
+            if (line.positionCount <= i || i < 0)
+                return;
+
             line.SetPosition(i, path[i].transform.position);
             await Task.Delay((int)(_animDelay * 100));
         }

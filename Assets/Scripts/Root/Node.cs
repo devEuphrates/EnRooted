@@ -5,7 +5,9 @@ public class Node : MonoBehaviour
 {
     public Branch OwnerBranch;
     public Node Parent;
-    public List<Node> Child = new List<Node>();
+    
+    List<Node> _children = new List<Node>();
+    
     public float DistanceToParent = .3f;
     private WaterSource _waterSource;
 
@@ -15,6 +17,19 @@ public class Node : MonoBehaviour
     [SerializeField] private float _water_increase_amount;
     [SerializeField] private float _time_to_call_water_source;
     [SerializeField] WaterEventSO _waterEvents;
+
+
+    public void AddChild(Node child)
+    {
+        _children.Add(child);
+        _sucking = false;
+        _waterEvents.DestroyWaterLine(this);
+    }
+
+    public void RemoveChild(Node node) => _children.Remove(node);
+
+    public int ChildCount => _children.Count;
+
     public float DistanceAbove
     {
         get
@@ -46,12 +61,13 @@ public class Node : MonoBehaviour
             Parent.AppendToPath(path);
     }
 
+    bool _sucking = false;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Water Source"))
+        if (other.gameObject.CompareTag("Water Source") && _children.Count == 0)
         {
-
-            var water_source = other.gameObject.GetComponent<WaterSource>();
+            _sucking = true;
+            var water_source = other.attachedRigidbody.GetComponent<WaterSource>();
             _waterSource = water_source;
             _waterEvents.CreateWaterLine(this);
         }
@@ -59,13 +75,13 @@ public class Node : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("Water Source"))
+        if (_sucking && other.gameObject.CompareTag("Water Source"))
         {
             _timer += Time.deltaTime;
             if (_timer >= _time_to_call_water_source)
             {
                 _timer = 0f;
-                if (_waterSource != null) _waterSource.ModifyValue();
+                if (_waterSource != null) _waterSource.ModifyVolume();
                 _waterAmount.Value += _water_increase_amount;
             }
         }
@@ -73,7 +89,7 @@ public class Node : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Water Source"))
+        if (_sucking && other.gameObject.CompareTag("Water Source"))
         {
             _waterEvents.DestroyWaterLine(this);
         }

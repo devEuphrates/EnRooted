@@ -2,29 +2,21 @@ using UnityEngine;
 
 public class WaterSource : MonoBehaviour
 {
-    [SerializeField] private float _baseValue;
-    private float _currentValue;
-    private float _targetValue;
-    [SerializeField] private float _decrease_by_Value;
-    [SerializeField] private float _approach_rate;
-    Collider _collider;
+    [SerializeField] Transform _scaled;
+    [SerializeField] Transform _displayer;
+    [SerializeField] float _downscaleValue = .1f;
+    float _startedScale;
 
-    private void Awake()
+    private void Start()
     {
-        _currentValue = _baseValue;
-        _targetValue = _baseValue;
-        _collider = gameObject.GetComponent<Collider>();
+        _startedScale = _scaled.localScale.y;
+        _displayer.localScale = _scaled.localScale;
     }
-    public void ModifyValue()
+
+    public void ModifyVolume()
     {
-        _targetValue = (_targetValue - _decrease_by_Value <= 0) ? 0 : _targetValue - _decrease_by_Value;
-        if (_targetValue == 0) _collider.isTrigger = false;
-    }
-    void Update()
-    {
-        var temp = transform.localScale;
-        _currentValue = Mathf.Lerp(_currentValue, _targetValue, _approach_rate);
-        temp.y = _currentValue / _baseValue;
-        transform.localScale = temp;
+        _scaled.localScale = new Vector3(_scaled.localScale.x, Mathf.Clamp(_scaled.localScale.y - _downscaleValue, 0, _startedScale), _scaled.localScale.z);
+        if (_scaled.localScale.y < _downscaleValue)
+            Destroy(gameObject);
     }
 }

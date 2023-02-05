@@ -35,7 +35,7 @@ public class Branch : MonoBehaviour
             {
                 Node lastNode = _nodes[_nodes.Count - 1];
 
-                lastNode.Child.Add(node);
+                lastNode.AddChild(node);
                 node.Parent = lastNode;
             }
 
@@ -45,8 +45,8 @@ public class Branch : MonoBehaviour
         }
 
         _nodes[atIndex].Parent = node;
-        _nodes[atIndex - 1].Child.Remove(_nodes[atIndex]);
-        _nodes[atIndex - 1].Child.Append(node);
+        _nodes[atIndex - 1].RemoveChild(_nodes[atIndex]);
+        _nodes[atIndex - 1].AddChild(node);
 
         _nodes.Insert(atIndex, node);
         SetLineRenderer();
