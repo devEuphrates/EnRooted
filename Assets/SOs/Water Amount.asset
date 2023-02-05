@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e411d25c7741e04429b14c32db88aac7, type: 3}
   m_Name: Water Amount
   m_EditorClassIdentifier: 
-  _value: 0
+  _value: 8377

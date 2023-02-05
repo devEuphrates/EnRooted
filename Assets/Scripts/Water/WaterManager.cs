@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -22,11 +23,25 @@ public class WaterManager : MonoBehaviour
         _waterEvents.OnDestroyWater -= DestroyWaterLine;
     }
 
-    void  CreateWaterLine(Node node)
+    void CreateWaterLine(Node node)
     {
+        if (UpdateWaterLine(node))
+            return;
+
         LineRenderer line = Instantiate(_water_line_prefab, Vector3.zero, Quaternion.identity, transform).GetComponent<LineRenderer>();
         _lines[node] = line;
-        SpawnAsync(node);
+        //SpawnAsync(node);
+
+
+        List<Node> path = node.PathToRoot;
+        Vector3[] pos = new Vector3[path.Count];
+
+        line.positionCount = path.Count;
+
+        for (int i = 0; i < path.Count; i++)
+            pos[i] = path[i].transform.position;
+
+        line.SetPositions(pos);
     }
 
     void DestroyWaterLine(Node node)
@@ -34,45 +49,80 @@ public class WaterManager : MonoBehaviour
         if (!_lines.ContainsKey(node))
             return;
 
-        DespawnAsync(node);
-    }
+        //DespawnAsync(node);
 
-    async void SpawnAsync(Node node)
-    {
-        LineRenderer line = _lines[node];
-        List<Node> path = node.PathToRoot;
-        line.positionCount = 0;
-
-        if (path.Count > 1)
-        {
-            line.positionCount = 2;
-            line.SetPosition(0, path[0].transform.position);
-            line.SetPosition(1, path[2].transform.position);
-        }
-
-        for (int i = 2; i < path.Count; i++)
-        {
-            line.positionCount++;
-
-            if (line.positionCount <= i || i < 0)
-                return;
-
-            line.SetPosition(i, path[i].transform.position);
-            await Task.Delay((int)(_animDelay * 100));
-        }
-    }
-
-    async void DespawnAsync(Node node)
-    {
-        LineRenderer line = _lines[node];
-
-        while (line.positionCount > 0)
-        {
-            line.positionCount--;
-            await Task.Delay((int)(_animDelay * 100));
-        }
-
-        Destroy(_lines[node].gameObject);
+        Destroy(_lines[node]);
         _lines.Remove(node);
     }
+
+    bool UpdateWaterLine(Node node)
+    {
+        foreach (var item in _lines)
+        {
+            if (item.Key.PathToRoot.Contains(node))
+                return true;
+        }
+
+        List<Node> path = node.PathToRoot;
+        LineRenderer line = null;
+        Node selected = null;
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            if (_lines.ContainsKey(path[i]))
+            {
+                selected = path[i];
+                line = _lines[selected];
+
+                if (path[i].ChildCount > 1)
+                    return false;
+
+                break;
+            }
+        }
+
+        if (line == null)
+            return false;
+
+        Vector3[] pos = new Vector3[path.Count];
+        for (int i = 0; i < pos.Length; i++)
+            pos[i] = path[i].transform.position;
+
+        line.positionCount = pos.Length;
+        line.SetPositions(pos);
+
+        _lines.Remove(selected);
+        _lines.Add(node, line);
+
+        return true;
+    }
+
+    //async void SpawnAsync(Node node)
+    //{
+    //    LineRenderer line = _lines[node];
+    //    List<Node> path = node.PathToRoot;
+    //    line.positionCount = 0;
+
+    //    for (int i = 0; i < path.Count; i++)
+    //    {
+    //        line.positionCount++;
+
+    //        line.SetPosition(i, path[i].transform.position);
+    //        await Task.Delay((int)(_animDelay * 100));
+    //    }
+    //}
+
+    //async void DespawnAsync(Node node)
+    //{
+    //    LineRenderer line = _lines[node];
+
+    //    while (line.positionCount > 0)
+    //    {
+    //        line.positionCount--;
+    //        await Task.Delay((int)(_animDelay * 100));
+    //    }
+
+    //    Destroy(_lines[node].gameObject);
+    //    _lines.Remove(node);
+    //}
 }

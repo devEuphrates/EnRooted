@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,6 @@ public class Node : MonoBehaviour
     {
         _children.Add(child);
         _sucking = false;
-        _waterEvents.DestroyWaterLine(this);
     }
 
     public void RemoveChild(Node node) => _children.Remove(node);
@@ -40,6 +40,9 @@ public class Node : MonoBehaviour
             return DistanceToParent + Parent.DistanceAbove;
         }
     }
+
+    public int Depth => PathToRoot.Count - 1;
+
     public List<Node> PathToRoot
     {
         get
@@ -64,12 +67,16 @@ public class Node : MonoBehaviour
     bool _sucking = false;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Water Source") && _children.Count == 0)
+        if (other.gameObject.CompareTag("Water Source"))
         {
+            _waterEvents.CreateWaterLine(this);
+
+            if (_children.Count > 0)
+                return;
+
             _sucking = true;
             var water_source = other.attachedRigidbody.GetComponent<WaterSource>();
             _waterSource = water_source;
-            _waterEvents.CreateWaterLine(this);
         }
     }
 
