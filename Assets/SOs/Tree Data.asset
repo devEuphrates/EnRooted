@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71bf144232422d418198f9c8f3be6c6, type: 3}
+  m_Name: Tree Data
+  m_EditorClassIdentifier: 
+  _levelDataLists:
+  - spawn_count: 3
+    Spawned_Branch_List: []
+    _minimumWaterAmountToSurvive: {fileID: 11400000, guid: b0a6412b623f7824bb2172f260b6b8ee,
+      type: 2}
+    _waterAmountToLevelUp: {fileID: 11400000, guid: 96a871b42d44f5b43904115ce75e0f68,
+      type: 2}
+  - spawn_count: 5
+    Spawned_Branch_List: []
+    _minimumWaterAmountToSurvive: {fileID: 11400000, guid: 557b622dbb5db7f4f9efc8b860941e18,
+      type: 2}
+    _waterAmountToLevelUp: {fileID: 11400000, guid: 73aba96fd83261f4989099130a2de001,
+      type: 2}
+  - spawn_count: 5
+    Spawned_Branch_List: []
+    _minimumWaterAmountToSurvive: {fileID: 11400000, guid: 01db995a6ddc8e94280b20d1f0113e81,
+      type: 2}
+    _waterAmountToLevelUp: {fileID: 11400000, guid: 69e509f32d45f5543ae8d690e048ba28,
+      type: 2}
+  _currentLevel: 0
